@@ -28,19 +28,17 @@ def run(gpu_id, resume_checkpoint, finetune, model_dir, resume, use_wandb, wandb
         device = torch.device("cuda")
     assert gpu_count == 1  # distributed finetuning is not supported
 
-    # IF YOU'RE ADDING A NEW LANGUAGE, YOU MIGHT NEED TO ADD HANDLING FOR IT IN Preprocessing/TextFrontend.py
-
     print("Preparing")
 
     if model_dir is not None:
         save_dir = model_dir
     else:
-        save_dir = os.path.join(MODELS_DIR, "ToucanTTS_FinetuningExample")  # RENAME TO SOMETHING MEANINGFUL FOR YOUR DATA
+        save_dir = os.path.join(MODELS_DIR, "ToucanTTS_trondelag")  
     os.makedirs(save_dir, exist_ok=True)
 
-    train_data = prepare_tts_corpus(transcript_dict=build_path_to_transcript_integration_test(),
-                                    corpus_dir=os.path.join(PREPROCESSING_DIR, "integration_test"),
-                                    lang="eng")  # CHANGE THE TRANSCRIPT DICT, THE NAME OF THE CACHE DIRECTORY AND THE LANGUAGE TO YOUR NEEDS
+    train_data = prepare_tts_corpus(transcript_dict=path_to_transcript_dict(),
+                                    corpus_dir=os.path.join(PREPROCESSING_DIR, "trondelag_dialects"),  
+                                    lang="nob") 
 
     model = ToucanTTS()
 
@@ -55,15 +53,14 @@ def run(gpu_id, resume_checkpoint, finetune, model_dir, resume, use_wandb, wandb
                datasets=[train_data],
                device=device,
                save_directory=save_dir,
-               batch_size=12,  # YOU MIGHT GET OUT OF MEMORY ISSUES ON SMALL GPUs, IF SO, DECREASE THIS.
-               eval_lang="eng",  # THE LANGUAGE YOUR PROGRESS PLOTS WILL BE MADE IN
-               warmup_steps=500,
-               lr=1e-5,  # if you have enough data (over ~1000 datapoints) you can increase this up to 1e-4 and it will still be stable, but learn quicker.
-               # DOWNLOAD THESE INITIALIZATION MODELS FROM THE RELEASE PAGE OF THE GITHUB OR RUN THE DOWNLOADER SCRIPT TO GET THEM AUTOMATICALLY
-               path_to_checkpoint=hf_hub_download(repo_id="Flux9665/ToucanTTS", filename="ToucanTTS.pt") if resume_checkpoint is None else resume_checkpoint,
+               batch_size=16,  # YOU MIGHT GET OUT OF MEMORY ISSUES ON SMALL GPUs, IF SO, DECREASE THIS.
+               eval_lang="nob",  # THE LANGUAGE YOUR PROGRESS PLOTS WILL BE MADE IN
+               warmup_steps=750,
+               lr=1e-4,  # if you have enough data (over ~1000 datapoints) you can increase this up to 1e-4 and it will still be stable, but learn quicker.
+               path_to_checkpoint=None,
                fine_tune=True if resume_checkpoint is None and not resume else finetune,
-               resume=resume,
-               steps=5000,
+               resume=False,
+               steps=4000000,
                use_wandb=use_wandb,
                train_samplers=[torch.utils.data.RandomSampler(train_data)],
                gpu_count=1)

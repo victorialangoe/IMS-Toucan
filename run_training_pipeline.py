@@ -23,7 +23,6 @@ from Recipes.finetuning_example_simple import run as fine_tuning_example_simple
 pipeline_dict = {
     # the finetuning examples
     "finetuning_example_simple"      : fine_tuning_example_simple,
-    "finetuning_example_multilingual": fine_tuning_example_multilingual,
     # integration test
     "tt_it"                          : tt_integration_test,
     # regular ToucanTTS pipelines

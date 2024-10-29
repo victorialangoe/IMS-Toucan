@@ -6,6 +6,20 @@ import xml.etree.ElementTree as ET
 from csv import DictReader
 from pathlib import Path
 
+def path_to_transcript_dict(): # added own function as readme states.
+    import csv
+    transcript_dict = {}
+    csv_file = "/home/victoria/training_data/combined_training_data/combined_training_data_cleaned.csv" 
+    
+    with open(csv_file, 'r') as file:
+        reader = csv.reader(file, delimiter='|')
+        for row in reader:
+            if len(row) >= 2:  
+                audio_path = row[0]
+                transcription = row[1]
+                transcript_dict[audio_path] = transcription
+    
+    return transcript_dict
 
 # HELPER FUNCTIONS
 

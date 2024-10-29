@@ -34,3 +34,4 @@ run_phonemizer.py
 *.pdf
 *.pkl
 *.gif
+toucan_env/
