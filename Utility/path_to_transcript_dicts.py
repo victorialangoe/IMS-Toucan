@@ -9,7 +9,7 @@ from pathlib import Path
 def path_to_transcript_dict(): # added own function as readme states.
     import csv
     transcript_dict = {}
-    csv_file = "/home/victoria/training_data/combined_training_data/combined_training_data_cleaned.csv" 
+    csv_file = "/home/victoria/training_data/combined_training_data_rogaland/combined_training_data_cleaned_rogaland.csv" 
     
     with open(csv_file, 'r') as file:
         reader = csv.reader(file, delimiter='|')

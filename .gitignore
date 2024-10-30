@@ -16,6 +16,7 @@ venv/
 vis/
 Utility/storage_config.py
 Preprocessing/multilinguality/distance_datasets
+checkpoints/
 
 
 *_graph
