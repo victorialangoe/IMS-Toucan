@@ -61,7 +61,7 @@ def run(gpu_id, resume_checkpoint, finetune, model_dir, resume, use_wandb, wandb
                fine_tune=True if resume_checkpoint is None and not resume else finetune,
                resume=False,
                steps=4000000,
-               use_wandb=use_wandb,
+               use_wandb=False,
                train_samplers=[torch.utils.data.RandomSampler(train_data)],
                gpu_count=1)
     if use_wandb:
