@@ -21,5 +21,4 @@ export LD_LIBRARY_PATH=/home/victoria/.local/lib:$LD_LIBRARY_PATH
 
 python run_training_pipeline.py finetuning_example_simple \
     --gpu_id 0 \
-    --model_save_dir /home/victoria/data/IMS-Toucan/checkpoints/ \
-    --wandb
+    --model_save_dir /home/victoria/IMS-Toucan/checkpoints/ \
