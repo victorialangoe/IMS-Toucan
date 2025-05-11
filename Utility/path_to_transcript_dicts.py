@@ -7,6 +7,21 @@ from csv import DictReader
 from pathlib import Path
 
 
+def path_to_transcript_dict(): # added own function as readme states.
+    import csv
+    transcript_dict = {}
+    csv_file = "../training_data/trondelag/csv/combined_data.csv" 
+    
+    with open(csv_file, 'r') as file:
+        reader = csv.reader(file, delimiter='|')
+        for row in reader:
+            if len(row) >= 2:  
+                audio_path = row[0]
+                transcription = row[1]
+                transcript_dict[audio_path] = transcription
+    
+    return transcript_dict
+
 # HELPER FUNCTIONS
 
 def split_dictionary_into_chunks(input_dict, split_n):

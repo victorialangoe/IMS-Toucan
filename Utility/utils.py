@@ -61,27 +61,29 @@ def pad_to_multiple_of_n(x, n=4, seq_dim=1, pad_value=0):
 
 
 @torch.inference_mode()
-def plot_progress_spec_toucantts(net,
-                                 device,
-                                 save_dir,
-                                 step,
-                                 lang,
-                                 default_emb,
-                                 run_stochastic):
+def plot_progress_spec_toucantts(net, device, save_dir, step, lang, default_emb, run_stochastic):
     tf = ArticulatoryCombinedTextFrontend(language=lang)
     sentence = tf.get_example_sentence(lang=lang)
+    print(f"Retrieved sentence: {sentence}")
     if sentence is None:
+        print("No sentence retrieved. Skipping heatmap generation.")
         return None
     phoneme_vector = tf.string_to_tensor(sentence).squeeze(0).to(device)
-    mel, durations, pitch, energy = net.inference(text=phoneme_vector,
-                                                  return_duration_pitch_energy=True,
-                                                  utterance_embedding=default_emb,
-                                                  lang_id=get_language_id(lang).to(device),
-                                                  run_stochastic=run_stochastic)
-
+    mel, durations, pitch, energy = net.inference(
+        text=phoneme_vector,
+        return_duration_pitch_energy=True,
+        utterance_embedding=default_emb,
+        lang_id=get_language_id(lang).to(device),
+        run_stochastic=run_stochastic
+    )
+    print(f"Mel tensor shape: {mel.shape}")
+    print(f"Mel tensor statistics - min: {mel.min()}, max: {mel.max()}, mean: {mel.mean()}")
+    print(f"Mel tensor contains NaN: {torch.isnan(mel).any()}")
+    print(f"Mel tensor contains Inf: {torch.isinf(mel).any()}")
+    
     plot_code_spec(pitch, energy, sentence, durations, mel, os.path.join(save_dir, "visualization"), tf, step)
+    print("Heatmap generation completed.")
     return os.path.join(os.path.join(save_dir, "visualization"), f"{step}.png")
-
 
 def plot_code_spec(pitch, energy, sentence, durations, mel, save_path, tf, step):
     fig, ax = plt.subplots(nrows=2, ncols=1, figsize=(9, 8))
